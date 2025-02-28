@@ -32,13 +32,28 @@ ES_t Switch_enuGetState(SW_t copy_SWAstr, u8 *copy_SWState)
 	else
 	{
 		Local_enuErrorState = DIO_enuGetPinValue(copy_SWAstr.Switch_PortID, copy_SWAstr.Switch_PinID,&PinValue);
-		if(PinValue == 1)
+		if(copy_SWAstr.Switch_status == DIO_u8FLOAT)
 		{
-			*copy_SWState = SW_NOTPRESSED;
+			if(PinValue == 0)
+			{
+				*copy_SWState = SW_NOTPRESSED;
+			}
+			else if(PinValue == 1)
+			{
+				*copy_SWState = SW_PRESSED;
+			}
 		}
-		else if(PinValue == 0)
+		else if(copy_SWAstr.Switch_status == DIO_u8PULL_UP)
 		{
-			*copy_SWState = SW_PRESSED;
+
+			if(PinValue == 1)
+			{
+				*copy_SWState = SW_NOTPRESSED;
+			}
+			else if(PinValue == 0)
+			{
+				*copy_SWState = SW_PRESSED;
+			}
 		}
 	}
 	return Local_enuErrorState;
