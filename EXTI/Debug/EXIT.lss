@@ -1,0 +1,746 @@
+
+EXIT.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000004aa  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .bss          00000006  00800060  00800060  0000051e  2**0
+                  ALLOC
+  2 .stab         00000720  00000000  00000000  00000520  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  3 .stabstr      0000054f  00000000  00000000  00000c40  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 71 01 	jmp	0x2e2	; 0x2e2 <__vector_1>
+   8:	0c 94 a7 01 	jmp	0x34e	; 0x34e <__vector_2>
+   c:	0c 94 dd 01 	jmp	0x3ba	; 0x3ba <__vector_3>
+  10:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  14:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  18:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  1c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  20:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  24:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  28:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  2c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  30:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  34:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  38:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  3c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  40:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  44:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  48:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  4c:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+  50:	0c 94 3c 00 	jmp	0x78	; 0x78 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_clear_bss>:
+  60:	10 e0       	ldi	r17, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	01 c0       	rjmp	.+2      	; 0x6a <.do_clear_bss_start>
+
+00000068 <.do_clear_bss_loop>:
+  68:	1d 92       	st	X+, r1
+
+0000006a <.do_clear_bss_start>:
+  6a:	a6 36       	cpi	r26, 0x66	; 102
+  6c:	b1 07       	cpc	r27, r17
+  6e:	e1 f7       	brne	.-8      	; 0x68 <.do_clear_bss_loop>
+  70:	0e 94 4a 02 	call	0x494	; 0x494 <main>
+  74:	0c 94 53 02 	jmp	0x4a6	; 0x4a6 <_exit>
+
+00000078 <__bad_interrupt>:
+  78:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000007c <EXTI_VoidInit>:
+#include "EXIT_priv.h"
+
+void (*EXTI_CallBack[3])(void) = {NULL};
+
+void EXTI_VoidInit (void)
+{
+  7c:	df 93       	push	r29
+  7e:	cf 93       	push	r28
+  80:	cd b7       	in	r28, 0x3d	; 61
+  82:	de b7       	in	r29, 0x3e	; 62
+				CLR_BIT(MCUCR_REG , 1);
+			#elif EXTI_SENSE_MODE == EXTI_ON_CHANGE
+				SET_BIT(MCUCR_REG , 0);
+				CLR_BIT(MCUCR_REG , 1);
+			#elif EXTI_SENSE_MODE == EXTI_FALLING_EDGE
+				CLR_BIT(MCUCR_REG , 0);
+  84:	e5 e5       	ldi	r30, 0x55	; 85
+  86:	f0 e0       	ldi	r31, 0x00	; 0
+  88:	80 81       	ld	r24, Z
+  8a:	60 e0       	ldi	r22, 0x00	; 0
+  8c:	0e 94 2e 02 	call	0x45c	; 0x45c <CLR_BIT>
+				SET_BIT(MCUCR_REG , 1);
+  90:	e5 e5       	ldi	r30, 0x55	; 85
+  92:	f0 e0       	ldi	r31, 0x00	; 0
+  94:	80 81       	ld	r24, Z
+  96:	61 e0       	ldi	r22, 0x01	; 1
+  98:	0e 94 13 02 	call	0x426	; 0x426 <SET_BIT>
+			#elif EXTI_SENSE_MODE == EXTI_RISING_EDGE
+				SET_BIT(MCUCSR_REG , 6);
+			#endif
+		#endif
+	#endif
+}
+  9c:	cf 91       	pop	r28
+  9e:	df 91       	pop	r29
+  a0:	08 95       	ret
+
+000000a2 <EXTI_SetSignalLatch>:
+
+void EXTI_SetSignalLatch (u8 Copy_u8SenseMode , u8 Copy_u8Line)
+{
+  a2:	df 93       	push	r29
+  a4:	cf 93       	push	r28
+  a6:	00 d0       	rcall	.+0      	; 0xa8 <EXTI_SetSignalLatch+0x6>
+  a8:	00 d0       	rcall	.+0      	; 0xaa <EXTI_SetSignalLatch+0x8>
+  aa:	00 d0       	rcall	.+0      	; 0xac <EXTI_SetSignalLatch+0xa>
+  ac:	cd b7       	in	r28, 0x3d	; 61
+  ae:	de b7       	in	r29, 0x3e	; 62
+  b0:	89 83       	std	Y+1, r24	; 0x01
+  b2:	6a 83       	std	Y+2, r22	; 0x02
+	if((Copy_u8Line >= EXTI_LINE0) && (Copy_u8Line <= EXTI_LINE1))
+  b4:	8a 81       	ldd	r24, Y+2	; 0x02
+  b6:	86 30       	cpi	r24, 0x06	; 6
+  b8:	08 f4       	brcc	.+2      	; 0xbc <EXTI_SetSignalLatch+0x1a>
+  ba:	6f c0       	rjmp	.+222    	; 0x19a <EXTI_SetSignalLatch+0xf8>
+  bc:	8a 81       	ldd	r24, Y+2	; 0x02
+  be:	88 30       	cpi	r24, 0x08	; 8
+  c0:	08 f0       	brcs	.+2      	; 0xc4 <EXTI_SetSignalLatch+0x22>
+  c2:	6b c0       	rjmp	.+214    	; 0x19a <EXTI_SetSignalLatch+0xf8>
+	{
+		Copy_u8Line = (6 - Copy_u8Line) * -2;
+  c4:	8a 81       	ldd	r24, Y+2	; 0x02
+  c6:	88 2f       	mov	r24, r24
+  c8:	90 e0       	ldi	r25, 0x00	; 0
+  ca:	06 97       	sbiw	r24, 0x06	; 6
+  cc:	88 0f       	add	r24, r24
+  ce:	99 1f       	adc	r25, r25
+  d0:	8a 83       	std	Y+2, r24	; 0x02
+		switch(Copy_u8SenseMode)
+  d2:	89 81       	ldd	r24, Y+1	; 0x01
+  d4:	28 2f       	mov	r18, r24
+  d6:	30 e0       	ldi	r19, 0x00	; 0
+  d8:	3e 83       	std	Y+6, r19	; 0x06
+  da:	2d 83       	std	Y+5, r18	; 0x05
+  dc:	8d 81       	ldd	r24, Y+5	; 0x05
+  de:	9e 81       	ldd	r25, Y+6	; 0x06
+  e0:	81 30       	cpi	r24, 0x01	; 1
+  e2:	91 05       	cpc	r25, r1
+  e4:	09 f4       	brne	.+2      	; 0xe8 <EXTI_SetSignalLatch+0x46>
+  e6:	48 c0       	rjmp	.+144    	; 0x178 <EXTI_SetSignalLatch+0xd6>
+  e8:	2d 81       	ldd	r18, Y+5	; 0x05
+  ea:	3e 81       	ldd	r19, Y+6	; 0x06
+  ec:	22 30       	cpi	r18, 0x02	; 2
+  ee:	31 05       	cpc	r19, r1
+  f0:	2c f4       	brge	.+10     	; 0xfc <EXTI_SetSignalLatch+0x5a>
+  f2:	8d 81       	ldd	r24, Y+5	; 0x05
+  f4:	9e 81       	ldd	r25, Y+6	; 0x06
+  f6:	00 97       	sbiw	r24, 0x00	; 0
+  f8:	71 f1       	breq	.+92     	; 0x156 <EXTI_SetSignalLatch+0xb4>
+  fa:	6b c0       	rjmp	.+214    	; 0x1d2 <EXTI_SetSignalLatch+0x130>
+  fc:	2d 81       	ldd	r18, Y+5	; 0x05
+  fe:	3e 81       	ldd	r19, Y+6	; 0x06
+ 100:	22 30       	cpi	r18, 0x02	; 2
+ 102:	31 05       	cpc	r19, r1
+ 104:	31 f0       	breq	.+12     	; 0x112 <EXTI_SetSignalLatch+0x70>
+ 106:	8d 81       	ldd	r24, Y+5	; 0x05
+ 108:	9e 81       	ldd	r25, Y+6	; 0x06
+ 10a:	83 30       	cpi	r24, 0x03	; 3
+ 10c:	91 05       	cpc	r25, r1
+ 10e:	91 f0       	breq	.+36     	; 0x134 <EXTI_SetSignalLatch+0x92>
+ 110:	60 c0       	rjmp	.+192    	; 0x1d2 <EXTI_SetSignalLatch+0x130>
+		{
+		case EXTI_LOW_LEVEL:
+			CLR_BIT(MCUCR_REG , Copy_u8Line);
+ 112:	e5 e5       	ldi	r30, 0x55	; 85
+ 114:	f0 e0       	ldi	r31, 0x00	; 0
+ 116:	80 81       	ld	r24, Z
+ 118:	6a 81       	ldd	r22, Y+2	; 0x02
+ 11a:	0e 94 2e 02 	call	0x45c	; 0x45c <CLR_BIT>
+			CLR_BIT(MCUCR_REG , Copy_u8Line+1);
+ 11e:	e5 e5       	ldi	r30, 0x55	; 85
+ 120:	f0 e0       	ldi	r31, 0x00	; 0
+ 122:	20 81       	ld	r18, Z
+ 124:	8a 81       	ldd	r24, Y+2	; 0x02
+ 126:	98 2f       	mov	r25, r24
+ 128:	9f 5f       	subi	r25, 0xFF	; 255
+ 12a:	82 2f       	mov	r24, r18
+ 12c:	69 2f       	mov	r22, r25
+ 12e:	0e 94 2e 02 	call	0x45c	; 0x45c <CLR_BIT>
+ 132:	4f c0       	rjmp	.+158    	; 0x1d2 <EXTI_SetSignalLatch+0x130>
+			break;
+		case EXTI_ON_CHANGE:
+			SET_BIT(MCUCR_REG , Copy_u8Line);
+ 134:	e5 e5       	ldi	r30, 0x55	; 85
+ 136:	f0 e0       	ldi	r31, 0x00	; 0
+ 138:	80 81       	ld	r24, Z
+ 13a:	6a 81       	ldd	r22, Y+2	; 0x02
+ 13c:	0e 94 13 02 	call	0x426	; 0x426 <SET_BIT>
+			CLR_BIT(MCUCR_REG , Copy_u8Line+1);
+ 140:	e5 e5       	ldi	r30, 0x55	; 85
+ 142:	f0 e0       	ldi	r31, 0x00	; 0
+ 144:	20 81       	ld	r18, Z
+ 146:	8a 81       	ldd	r24, Y+2	; 0x02
+ 148:	98 2f       	mov	r25, r24
+ 14a:	9f 5f       	subi	r25, 0xFF	; 255
+ 14c:	82 2f       	mov	r24, r18
+ 14e:	69 2f       	mov	r22, r25
+ 150:	0e 94 2e 02 	call	0x45c	; 0x45c <CLR_BIT>
+ 154:	3e c0       	rjmp	.+124    	; 0x1d2 <EXTI_SetSignalLatch+0x130>
+			break;
+		case EXTI_FALLING_EDGE:
+			CLR_BIT(MCUCR_REG , Copy_u8Line);
+ 156:	e5 e5       	ldi	r30, 0x55	; 85
+ 158:	f0 e0       	ldi	r31, 0x00	; 0
+ 15a:	80 81       	ld	r24, Z
+ 15c:	6a 81       	ldd	r22, Y+2	; 0x02
+ 15e:	0e 94 2e 02 	call	0x45c	; 0x45c <CLR_BIT>
+			SET_BIT(MCUCR_REG , Copy_u8Line+1);
+ 162:	e5 e5       	ldi	r30, 0x55	; 85
+ 164:	f0 e0       	ldi	r31, 0x00	; 0
+ 166:	20 81       	ld	r18, Z
+ 168:	8a 81       	ldd	r24, Y+2	; 0x02
+ 16a:	98 2f       	mov	r25, r24
+ 16c:	9f 5f       	subi	r25, 0xFF	; 255
+ 16e:	82 2f       	mov	r24, r18
+ 170:	69 2f       	mov	r22, r25
+ 172:	0e 94 13 02 	call	0x426	; 0x426 <SET_BIT>
+ 176:	2d c0       	rjmp	.+90     	; 0x1d2 <EXTI_SetSignalLatch+0x130>
+			break;
+		case EXTI_RISING_EDGE:
+			SET_BIT(MCUCR_REG , Copy_u8Line);
+ 178:	e5 e5       	ldi	r30, 0x55	; 85
+ 17a:	f0 e0       	ldi	r31, 0x00	; 0
+ 17c:	80 81       	ld	r24, Z
+ 17e:	6a 81       	ldd	r22, Y+2	; 0x02
+ 180:	0e 94 13 02 	call	0x426	; 0x426 <SET_BIT>
+			SET_BIT(MCUCR_REG , Copy_u8Line+1);
+ 184:	e5 e5       	ldi	r30, 0x55	; 85
+ 186:	f0 e0       	ldi	r31, 0x00	; 0
+ 188:	20 81       	ld	r18, Z
+ 18a:	8a 81       	ldd	r24, Y+2	; 0x02
+ 18c:	98 2f       	mov	r25, r24
+ 18e:	9f 5f       	subi	r25, 0xFF	; 255
+ 190:	82 2f       	mov	r24, r18
+ 192:	69 2f       	mov	r22, r25
+ 194:	0e 94 13 02 	call	0x426	; 0x426 <SET_BIT>
+ 198:	1c c0       	rjmp	.+56     	; 0x1d2 <EXTI_SetSignalLatch+0x130>
+			break;
+		}
+	}
+	else
+	{
+		switch(Copy_u8SenseMode)
+ 19a:	89 81       	ldd	r24, Y+1	; 0x01
+ 19c:	28 2f       	mov	r18, r24
+ 19e:	30 e0       	ldi	r19, 0x00	; 0
+ 1a0:	3c 83       	std	Y+4, r19	; 0x04
+ 1a2:	2b 83       	std	Y+3, r18	; 0x03
+ 1a4:	8b 81       	ldd	r24, Y+3	; 0x03
+ 1a6:	9c 81       	ldd	r25, Y+4	; 0x04
+ 1a8:	00 97       	sbiw	r24, 0x00	; 0
+ 1aa:	31 f0       	breq	.+12     	; 0x1b8 <EXTI_SetSignalLatch+0x116>
+ 1ac:	2b 81       	ldd	r18, Y+3	; 0x03
+ 1ae:	3c 81       	ldd	r19, Y+4	; 0x04
+ 1b0:	21 30       	cpi	r18, 0x01	; 1
+ 1b2:	31 05       	cpc	r19, r1
+ 1b4:	41 f0       	breq	.+16     	; 0x1c6 <EXTI_SetSignalLatch+0x124>
+ 1b6:	0d c0       	rjmp	.+26     	; 0x1d2 <EXTI_SetSignalLatch+0x130>
+		{
+		case EXTI_FALLING_EDGE :
+			CLR_BIT(MCUCSR_REG , 6);
+ 1b8:	e4 e5       	ldi	r30, 0x54	; 84
+ 1ba:	f0 e0       	ldi	r31, 0x00	; 0
+ 1bc:	80 81       	ld	r24, Z
+ 1be:	66 e0       	ldi	r22, 0x06	; 6
+ 1c0:	0e 94 2e 02 	call	0x45c	; 0x45c <CLR_BIT>
+ 1c4:	06 c0       	rjmp	.+12     	; 0x1d2 <EXTI_SetSignalLatch+0x130>
+			break;
+		case EXTI_RISING_EDGE:
+			SET_BIT(MCUCSR_REG , 6);
+ 1c6:	e4 e5       	ldi	r30, 0x54	; 84
+ 1c8:	f0 e0       	ldi	r31, 0x00	; 0
+ 1ca:	80 81       	ld	r24, Z
+ 1cc:	66 e0       	ldi	r22, 0x06	; 6
+ 1ce:	0e 94 13 02 	call	0x426	; 0x426 <SET_BIT>
+			break;
+		}
+	}
+}
+ 1d2:	26 96       	adiw	r28, 0x06	; 6
+ 1d4:	0f b6       	in	r0, 0x3f	; 63
+ 1d6:	f8 94       	cli
+ 1d8:	de bf       	out	0x3e, r29	; 62
+ 1da:	0f be       	out	0x3f, r0	; 63
+ 1dc:	cd bf       	out	0x3d, r28	; 61
+ 1de:	cf 91       	pop	r28
+ 1e0:	df 91       	pop	r29
+ 1e2:	08 95       	ret
+
+000001e4 <EXIT_VoidDisableInterrupt>:
+
+u8 EXIT_VoidDisableInterrupt(u8 Copy_u8Line)
+{
+ 1e4:	df 93       	push	r29
+ 1e6:	cf 93       	push	r28
+ 1e8:	00 d0       	rcall	.+0      	; 0x1ea <EXIT_VoidDisableInterrupt+0x6>
+ 1ea:	cd b7       	in	r28, 0x3d	; 61
+ 1ec:	de b7       	in	r29, 0x3e	; 62
+ 1ee:	8a 83       	std	Y+2, r24	; 0x02
+	ES_t Local_ErrorState = ES_NOK;
+ 1f0:	19 82       	std	Y+1, r1	; 0x01
+	if((Copy_u8Line > EXTI_LINE2) && (Copy_u8Line < EXTI_LINE1))
+ 1f2:	8a 81       	ldd	r24, Y+2	; 0x02
+ 1f4:	86 30       	cpi	r24, 0x06	; 6
+ 1f6:	58 f0       	brcs	.+22     	; 0x20e <EXIT_VoidDisableInterrupt+0x2a>
+ 1f8:	8a 81       	ldd	r24, Y+2	; 0x02
+ 1fa:	87 30       	cpi	r24, 0x07	; 7
+ 1fc:	40 f4       	brcc	.+16     	; 0x20e <EXIT_VoidDisableInterrupt+0x2a>
+	{
+		CLR_BIT(GICR_REG , Copy_u8Line);
+ 1fe:	e8 e5       	ldi	r30, 0x58	; 88
+ 200:	f0 e0       	ldi	r31, 0x00	; 0
+ 202:	80 81       	ld	r24, Z
+ 204:	6a 81       	ldd	r22, Y+2	; 0x02
+ 206:	0e 94 2e 02 	call	0x45c	; 0x45c <CLR_BIT>
+		Local_ErrorState = ES_OK;
+ 20a:	81 e0       	ldi	r24, 0x01	; 1
+ 20c:	89 83       	std	Y+1, r24	; 0x01
+	}
+	return Local_ErrorState;
+ 20e:	89 81       	ldd	r24, Y+1	; 0x01
+}
+ 210:	0f 90       	pop	r0
+ 212:	0f 90       	pop	r0
+ 214:	cf 91       	pop	r28
+ 216:	df 91       	pop	r29
+ 218:	08 95       	ret
+
+0000021a <EXIT_VoidEnableInterrupt>:
+
+u8 EXIT_VoidEnableInterrupt(u8 Copy_u8Line)
+{
+ 21a:	df 93       	push	r29
+ 21c:	cf 93       	push	r28
+ 21e:	00 d0       	rcall	.+0      	; 0x220 <EXIT_VoidEnableInterrupt+0x6>
+ 220:	cd b7       	in	r28, 0x3d	; 61
+ 222:	de b7       	in	r29, 0x3e	; 62
+ 224:	8a 83       	std	Y+2, r24	; 0x02
+	ES_t Local_ErrorState = ES_NOK;
+ 226:	19 82       	std	Y+1, r1	; 0x01
+	if((Copy_u8Line > EXTI_LINE2) && (Copy_u8Line < EXTI_LINE1))
+ 228:	8a 81       	ldd	r24, Y+2	; 0x02
+ 22a:	86 30       	cpi	r24, 0x06	; 6
+ 22c:	58 f0       	brcs	.+22     	; 0x244 <EXIT_VoidEnableInterrupt+0x2a>
+ 22e:	8a 81       	ldd	r24, Y+2	; 0x02
+ 230:	87 30       	cpi	r24, 0x07	; 7
+ 232:	40 f4       	brcc	.+16     	; 0x244 <EXIT_VoidEnableInterrupt+0x2a>
+	{
+		SET_BIT(GICR_REG , Copy_u8Line);
+ 234:	e8 e5       	ldi	r30, 0x58	; 88
+ 236:	f0 e0       	ldi	r31, 0x00	; 0
+ 238:	80 81       	ld	r24, Z
+ 23a:	6a 81       	ldd	r22, Y+2	; 0x02
+ 23c:	0e 94 13 02 	call	0x426	; 0x426 <SET_BIT>
+		Local_ErrorState = ES_OK;
+ 240:	81 e0       	ldi	r24, 0x01	; 1
+ 242:	89 83       	std	Y+1, r24	; 0x01
+	}
+	return Local_ErrorState;
+ 244:	89 81       	ldd	r24, Y+1	; 0x01
+}
+ 246:	0f 90       	pop	r0
+ 248:	0f 90       	pop	r0
+ 24a:	cf 91       	pop	r28
+ 24c:	df 91       	pop	r29
+ 24e:	08 95       	ret
+
+00000250 <EXTI_voidClearFlag>:
+
+void EXTI_voidClearFlag(u8 Copy_u8Line)
+{
+ 250:	df 93       	push	r29
+ 252:	cf 93       	push	r28
+ 254:	0f 92       	push	r0
+ 256:	cd b7       	in	r28, 0x3d	; 61
+ 258:	de b7       	in	r29, 0x3e	; 62
+ 25a:	89 83       	std	Y+1, r24	; 0x01
+	SET_BIT(GIFR_REG , Copy_u8Line);
+ 25c:	ea e5       	ldi	r30, 0x5A	; 90
+ 25e:	f0 e0       	ldi	r31, 0x00	; 0
+ 260:	80 81       	ld	r24, Z
+ 262:	69 81       	ldd	r22, Y+1	; 0x01
+ 264:	0e 94 13 02 	call	0x426	; 0x426 <SET_BIT>
+}
+ 268:	0f 90       	pop	r0
+ 26a:	cf 91       	pop	r28
+ 26c:	df 91       	pop	r29
+ 26e:	08 95       	ret
+
+00000270 <EXTI_voidGetFlag>:
+
+u8 EXTI_voidGetFlag(u8 Copy_u8Line)
+{
+ 270:	df 93       	push	r29
+ 272:	cf 93       	push	r28
+ 274:	0f 92       	push	r0
+ 276:	cd b7       	in	r28, 0x3d	; 61
+ 278:	de b7       	in	r29, 0x3e	; 62
+ 27a:	89 83       	std	Y+1, r24	; 0x01
+	return (1&(GIFR_REG>>Copy_u8Line));
+ 27c:	ea e5       	ldi	r30, 0x5A	; 90
+ 27e:	f0 e0       	ldi	r31, 0x00	; 0
+ 280:	80 81       	ld	r24, Z
+ 282:	28 2f       	mov	r18, r24
+ 284:	30 e0       	ldi	r19, 0x00	; 0
+ 286:	89 81       	ldd	r24, Y+1	; 0x01
+ 288:	88 2f       	mov	r24, r24
+ 28a:	90 e0       	ldi	r25, 0x00	; 0
+ 28c:	a9 01       	movw	r20, r18
+ 28e:	02 c0       	rjmp	.+4      	; 0x294 <EXTI_voidGetFlag+0x24>
+ 290:	55 95       	asr	r21
+ 292:	47 95       	ror	r20
+ 294:	8a 95       	dec	r24
+ 296:	e2 f7       	brpl	.-8      	; 0x290 <EXTI_voidGetFlag+0x20>
+ 298:	ca 01       	movw	r24, r20
+ 29a:	81 70       	andi	r24, 0x01	; 1
+}
+ 29c:	0f 90       	pop	r0
+ 29e:	cf 91       	pop	r28
+ 2a0:	df 91       	pop	r29
+ 2a2:	08 95       	ret
+
+000002a4 <EXTI_voidSetCallBack>:
+
+void EXTI_voidSetCallBack(void(*Copy_pvoidCallBack)(void),u8 Copy_u8EXTILine)
+{
+ 2a4:	df 93       	push	r29
+ 2a6:	cf 93       	push	r28
+ 2a8:	00 d0       	rcall	.+0      	; 0x2aa <EXTI_voidSetCallBack+0x6>
+ 2aa:	0f 92       	push	r0
+ 2ac:	cd b7       	in	r28, 0x3d	; 61
+ 2ae:	de b7       	in	r29, 0x3e	; 62
+ 2b0:	9a 83       	std	Y+2, r25	; 0x02
+ 2b2:	89 83       	std	Y+1, r24	; 0x01
+ 2b4:	6b 83       	std	Y+3, r22	; 0x03
+	if(Copy_pvoidCallBack != NULL)
+ 2b6:	89 81       	ldd	r24, Y+1	; 0x01
+ 2b8:	9a 81       	ldd	r25, Y+2	; 0x02
+ 2ba:	00 97       	sbiw	r24, 0x00	; 0
+ 2bc:	61 f0       	breq	.+24     	; 0x2d6 <EXTI_voidSetCallBack+0x32>
+	{
+		EXTI_CallBack[Copy_u8EXTILine] = Copy_pvoidCallBack;
+ 2be:	8b 81       	ldd	r24, Y+3	; 0x03
+ 2c0:	88 2f       	mov	r24, r24
+ 2c2:	90 e0       	ldi	r25, 0x00	; 0
+ 2c4:	88 0f       	add	r24, r24
+ 2c6:	99 1f       	adc	r25, r25
+ 2c8:	fc 01       	movw	r30, r24
+ 2ca:	e0 5a       	subi	r30, 0xA0	; 160
+ 2cc:	ff 4f       	sbci	r31, 0xFF	; 255
+ 2ce:	89 81       	ldd	r24, Y+1	; 0x01
+ 2d0:	9a 81       	ldd	r25, Y+2	; 0x02
+ 2d2:	91 83       	std	Z+1, r25	; 0x01
+ 2d4:	80 83       	st	Z, r24
+	}
+}
+ 2d6:	0f 90       	pop	r0
+ 2d8:	0f 90       	pop	r0
+ 2da:	0f 90       	pop	r0
+ 2dc:	cf 91       	pop	r28
+ 2de:	df 91       	pop	r29
+ 2e0:	08 95       	ret
+
+000002e2 <__vector_1>:
+
+void __vector_1(void) __attribute__((signal));
+void __vector_1(void)
+{
+ 2e2:	1f 92       	push	r1
+ 2e4:	0f 92       	push	r0
+ 2e6:	0f b6       	in	r0, 0x3f	; 63
+ 2e8:	0f 92       	push	r0
+ 2ea:	11 24       	eor	r1, r1
+ 2ec:	2f 93       	push	r18
+ 2ee:	3f 93       	push	r19
+ 2f0:	4f 93       	push	r20
+ 2f2:	5f 93       	push	r21
+ 2f4:	6f 93       	push	r22
+ 2f6:	7f 93       	push	r23
+ 2f8:	8f 93       	push	r24
+ 2fa:	9f 93       	push	r25
+ 2fc:	af 93       	push	r26
+ 2fe:	bf 93       	push	r27
+ 300:	ef 93       	push	r30
+ 302:	ff 93       	push	r31
+ 304:	df 93       	push	r29
+ 306:	cf 93       	push	r28
+ 308:	cd b7       	in	r28, 0x3d	; 61
+ 30a:	de b7       	in	r29, 0x3e	; 62
+	if(EXTI_CallBack[0] != NULL)
+ 30c:	80 91 60 00 	lds	r24, 0x0060
+ 310:	90 91 61 00 	lds	r25, 0x0061
+ 314:	00 97       	sbiw	r24, 0x00	; 0
+ 316:	41 f0       	breq	.+16     	; 0x328 <__vector_1+0x46>
+	{
+		EXTI_CallBack[0]();
+ 318:	e0 91 60 00 	lds	r30, 0x0060
+ 31c:	f0 91 61 00 	lds	r31, 0x0061
+ 320:	09 95       	icall
+		EXTI_voidClearFlag(EXTI_LINE2);
+ 322:	85 e0       	ldi	r24, 0x05	; 5
+ 324:	0e 94 28 01 	call	0x250	; 0x250 <EXTI_voidClearFlag>
+	}
+}
+ 328:	cf 91       	pop	r28
+ 32a:	df 91       	pop	r29
+ 32c:	ff 91       	pop	r31
+ 32e:	ef 91       	pop	r30
+ 330:	bf 91       	pop	r27
+ 332:	af 91       	pop	r26
+ 334:	9f 91       	pop	r25
+ 336:	8f 91       	pop	r24
+ 338:	7f 91       	pop	r23
+ 33a:	6f 91       	pop	r22
+ 33c:	5f 91       	pop	r21
+ 33e:	4f 91       	pop	r20
+ 340:	3f 91       	pop	r19
+ 342:	2f 91       	pop	r18
+ 344:	0f 90       	pop	r0
+ 346:	0f be       	out	0x3f, r0	; 63
+ 348:	0f 90       	pop	r0
+ 34a:	1f 90       	pop	r1
+ 34c:	18 95       	reti
+
+0000034e <__vector_2>:
+
+void __vector_2(void) __attribute__((signal));
+void __vector_2(void)
+{
+ 34e:	1f 92       	push	r1
+ 350:	0f 92       	push	r0
+ 352:	0f b6       	in	r0, 0x3f	; 63
+ 354:	0f 92       	push	r0
+ 356:	11 24       	eor	r1, r1
+ 358:	2f 93       	push	r18
+ 35a:	3f 93       	push	r19
+ 35c:	4f 93       	push	r20
+ 35e:	5f 93       	push	r21
+ 360:	6f 93       	push	r22
+ 362:	7f 93       	push	r23
+ 364:	8f 93       	push	r24
+ 366:	9f 93       	push	r25
+ 368:	af 93       	push	r26
+ 36a:	bf 93       	push	r27
+ 36c:	ef 93       	push	r30
+ 36e:	ff 93       	push	r31
+ 370:	df 93       	push	r29
+ 372:	cf 93       	push	r28
+ 374:	cd b7       	in	r28, 0x3d	; 61
+ 376:	de b7       	in	r29, 0x3e	; 62
+	if(EXTI_CallBack[1] != NULL)
+ 378:	80 91 62 00 	lds	r24, 0x0062
+ 37c:	90 91 63 00 	lds	r25, 0x0063
+ 380:	00 97       	sbiw	r24, 0x00	; 0
+ 382:	41 f0       	breq	.+16     	; 0x394 <__vector_2+0x46>
+	{
+		EXTI_CallBack[1]();
+ 384:	e0 91 62 00 	lds	r30, 0x0062
+ 388:	f0 91 63 00 	lds	r31, 0x0063
+ 38c:	09 95       	icall
+		EXTI_voidClearFlag(EXTI_LINE2);
+ 38e:	85 e0       	ldi	r24, 0x05	; 5
+ 390:	0e 94 28 01 	call	0x250	; 0x250 <EXTI_voidClearFlag>
+	}
+}
+ 394:	cf 91       	pop	r28
+ 396:	df 91       	pop	r29
+ 398:	ff 91       	pop	r31
+ 39a:	ef 91       	pop	r30
+ 39c:	bf 91       	pop	r27
+ 39e:	af 91       	pop	r26
+ 3a0:	9f 91       	pop	r25
+ 3a2:	8f 91       	pop	r24
+ 3a4:	7f 91       	pop	r23
+ 3a6:	6f 91       	pop	r22
+ 3a8:	5f 91       	pop	r21
+ 3aa:	4f 91       	pop	r20
+ 3ac:	3f 91       	pop	r19
+ 3ae:	2f 91       	pop	r18
+ 3b0:	0f 90       	pop	r0
+ 3b2:	0f be       	out	0x3f, r0	; 63
+ 3b4:	0f 90       	pop	r0
+ 3b6:	1f 90       	pop	r1
+ 3b8:	18 95       	reti
+
+000003ba <__vector_3>:
+void __vector_3(void) __attribute__((signal));
+void __vector_3(void)
+{
+ 3ba:	1f 92       	push	r1
+ 3bc:	0f 92       	push	r0
+ 3be:	0f b6       	in	r0, 0x3f	; 63
+ 3c0:	0f 92       	push	r0
+ 3c2:	11 24       	eor	r1, r1
+ 3c4:	2f 93       	push	r18
+ 3c6:	3f 93       	push	r19
+ 3c8:	4f 93       	push	r20
+ 3ca:	5f 93       	push	r21
+ 3cc:	6f 93       	push	r22
+ 3ce:	7f 93       	push	r23
+ 3d0:	8f 93       	push	r24
+ 3d2:	9f 93       	push	r25
+ 3d4:	af 93       	push	r26
+ 3d6:	bf 93       	push	r27
+ 3d8:	ef 93       	push	r30
+ 3da:	ff 93       	push	r31
+ 3dc:	df 93       	push	r29
+ 3de:	cf 93       	push	r28
+ 3e0:	cd b7       	in	r28, 0x3d	; 61
+ 3e2:	de b7       	in	r29, 0x3e	; 62
+	if(EXTI_CallBack[2] != NULL)
+ 3e4:	80 91 64 00 	lds	r24, 0x0064
+ 3e8:	90 91 65 00 	lds	r25, 0x0065
+ 3ec:	00 97       	sbiw	r24, 0x00	; 0
+ 3ee:	41 f0       	breq	.+16     	; 0x400 <__vector_3+0x46>
+	{
+		EXTI_CallBack[2]();
+ 3f0:	e0 91 64 00 	lds	r30, 0x0064
+ 3f4:	f0 91 65 00 	lds	r31, 0x0065
+ 3f8:	09 95       	icall
+		EXTI_voidClearFlag(EXTI_LINE2);
+ 3fa:	85 e0       	ldi	r24, 0x05	; 5
+ 3fc:	0e 94 28 01 	call	0x250	; 0x250 <EXTI_voidClearFlag>
+	}
+}
+ 400:	cf 91       	pop	r28
+ 402:	df 91       	pop	r29
+ 404:	ff 91       	pop	r31
+ 406:	ef 91       	pop	r30
+ 408:	bf 91       	pop	r27
+ 40a:	af 91       	pop	r26
+ 40c:	9f 91       	pop	r25
+ 40e:	8f 91       	pop	r24
+ 410:	7f 91       	pop	r23
+ 412:	6f 91       	pop	r22
+ 414:	5f 91       	pop	r21
+ 416:	4f 91       	pop	r20
+ 418:	3f 91       	pop	r19
+ 41a:	2f 91       	pop	r18
+ 41c:	0f 90       	pop	r0
+ 41e:	0f be       	out	0x3f, r0	; 63
+ 420:	0f 90       	pop	r0
+ 422:	1f 90       	pop	r1
+ 424:	18 95       	reti
+
+00000426 <SET_BIT>:
+
+void SET_BIT(u8 Copy_u8Reg , u8 Copy_u8Bit)
+{
+ 426:	df 93       	push	r29
+ 428:	cf 93       	push	r28
+ 42a:	00 d0       	rcall	.+0      	; 0x42c <SET_BIT+0x6>
+ 42c:	cd b7       	in	r28, 0x3d	; 61
+ 42e:	de b7       	in	r29, 0x3e	; 62
+ 430:	89 83       	std	Y+1, r24	; 0x01
+ 432:	6a 83       	std	Y+2, r22	; 0x02
+	Copy_u8Reg |= (1<<Copy_u8Bit);
+ 434:	8a 81       	ldd	r24, Y+2	; 0x02
+ 436:	28 2f       	mov	r18, r24
+ 438:	30 e0       	ldi	r19, 0x00	; 0
+ 43a:	81 e0       	ldi	r24, 0x01	; 1
+ 43c:	90 e0       	ldi	r25, 0x00	; 0
+ 43e:	02 2e       	mov	r0, r18
+ 440:	02 c0       	rjmp	.+4      	; 0x446 <SET_BIT+0x20>
+ 442:	88 0f       	add	r24, r24
+ 444:	99 1f       	adc	r25, r25
+ 446:	0a 94       	dec	r0
+ 448:	e2 f7       	brpl	.-8      	; 0x442 <SET_BIT+0x1c>
+ 44a:	98 2f       	mov	r25, r24
+ 44c:	89 81       	ldd	r24, Y+1	; 0x01
+ 44e:	89 2b       	or	r24, r25
+ 450:	89 83       	std	Y+1, r24	; 0x01
+}
+ 452:	0f 90       	pop	r0
+ 454:	0f 90       	pop	r0
+ 456:	cf 91       	pop	r28
+ 458:	df 91       	pop	r29
+ 45a:	08 95       	ret
+
+0000045c <CLR_BIT>:
+
+void CLR_BIT(u8 Copy_u8Reg , u8 Copy_u8Bit)
+{
+ 45c:	df 93       	push	r29
+ 45e:	cf 93       	push	r28
+ 460:	00 d0       	rcall	.+0      	; 0x462 <CLR_BIT+0x6>
+ 462:	cd b7       	in	r28, 0x3d	; 61
+ 464:	de b7       	in	r29, 0x3e	; 62
+ 466:	89 83       	std	Y+1, r24	; 0x01
+ 468:	6a 83       	std	Y+2, r22	; 0x02
+	Copy_u8Reg &= ~(1<<Copy_u8Bit);
+ 46a:	8a 81       	ldd	r24, Y+2	; 0x02
+ 46c:	28 2f       	mov	r18, r24
+ 46e:	30 e0       	ldi	r19, 0x00	; 0
+ 470:	81 e0       	ldi	r24, 0x01	; 1
+ 472:	90 e0       	ldi	r25, 0x00	; 0
+ 474:	02 2e       	mov	r0, r18
+ 476:	02 c0       	rjmp	.+4      	; 0x47c <CLR_BIT+0x20>
+ 478:	88 0f       	add	r24, r24
+ 47a:	99 1f       	adc	r25, r25
+ 47c:	0a 94       	dec	r0
+ 47e:	e2 f7       	brpl	.-8      	; 0x478 <CLR_BIT+0x1c>
+ 480:	98 2f       	mov	r25, r24
+ 482:	90 95       	com	r25
+ 484:	89 81       	ldd	r24, Y+1	; 0x01
+ 486:	89 23       	and	r24, r25
+ 488:	89 83       	std	Y+1, r24	; 0x01
+}
+ 48a:	0f 90       	pop	r0
+ 48c:	0f 90       	pop	r0
+ 48e:	cf 91       	pop	r28
+ 490:	df 91       	pop	r29
+ 492:	08 95       	ret
+
+00000494 <main>:
+ *  Created on: Dec 5, 2024
+ *      Author: mylap
+ */
+
+int main()
+{
+ 494:	df 93       	push	r29
+ 496:	cf 93       	push	r28
+ 498:	cd b7       	in	r28, 0x3d	; 61
+ 49a:	de b7       	in	r29, 0x3e	; 62
+
+	return 0;
+ 49c:	80 e0       	ldi	r24, 0x00	; 0
+ 49e:	90 e0       	ldi	r25, 0x00	; 0
+}
+ 4a0:	cf 91       	pop	r28
+ 4a2:	df 91       	pop	r29
+ 4a4:	08 95       	ret
+
+000004a6 <_exit>:
+ 4a6:	f8 94       	cli
+
+000004a8 <__stop_program>:
+ 4a8:	ff cf       	rjmp	.-2      	; 0x4a8 <__stop_program>
